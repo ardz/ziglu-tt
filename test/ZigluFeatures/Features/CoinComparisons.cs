@@ -23,9 +23,7 @@ namespace ZigluFeatures.Features
         }
 
         /// <summary>
-        /// BDD wouldn't be at this level in the real world :S you couldn't really write tests
-        /// for this because you're just testing data is retrieved from a third party API?
-        /// that's why I've added to ModelToTextOutput method on the service class
+        /// BDD wouldn't be at this level in the real world :S
         /// </summary>
         /// <param name="coinName"></param>
         [Scenario]
