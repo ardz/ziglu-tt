@@ -29,21 +29,18 @@ namespace ZigluFeatures.Features
         public void UserCanViewTopThreeExchangesTrustScore(List<Exchange> exchanges)
         {
             $"When the user queries the top three exchanges"
-                .x(async () =>
-                {
-                    exchanges = (await ZigluService.GetExchanges(3)).ToList();
-                });
+                .x(async () => { exchanges = (await ZigluService.GetExchanges(3)).ToList(); });
 
             $"Then the user can see each of the exchanges names and their trust ranking"
                 .x(() =>
                 {
                     Assert.Equal(3, exchanges.Count);
 
-                    foreach (var exchangeData in exchanges.Select(Service.ModelToTextOutput))
+                    foreach (var exchange in exchanges)
                     {
-                        exchangeData.Should().Contain("TrustScore");
-                        exchangeData.Should().Contain("TrustScoreRank");
-                        _output.WriteLine(exchangeData);
+                        exchange.TrustScore.Should().NotBe(default);
+                        exchange.TrustScoreRank.Should().NotBe(default);
+                        _output.WriteLine(Service.ModelToTextOutput(exchange));
                     }
                 });
         }

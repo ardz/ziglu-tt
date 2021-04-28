@@ -44,9 +44,9 @@ namespace ZigluService
             }).OrderByDescending(x => x.TradeVolume24HoursNormalized).Take(numberOfExchanges);
         }
 
-        public async Task<Coin> CoinInfo(string coinName)
+        public async Task<Coin> CoinInfo(string coinId)
         {
-            var coin = await _coinGeckoClient.GetCoin(coinName);
+            var coin = await _coinGeckoClient.GetCoin(coinId);
 
             return new Coin
             {
