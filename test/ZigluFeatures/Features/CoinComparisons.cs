@@ -1,7 +1,8 @@
-﻿using System.Text.Json;
+﻿using FluentAssertions;
 using Xbehave;
 using Xunit;
 using Xunit.Abstractions;
+using ZigluService;
 using ZigluService.Models;
 
 namespace ZigluFeatures.Features
@@ -9,7 +10,8 @@ namespace ZigluFeatures.Features
     /// <summary>
     /// Feature 3
     ///
-    ///
+    /// As a user, I want to be able to see coin data
+    /// So that ???
     /// </summary>
     public class CoinComparisons : FeatureFixture
     {
@@ -21,7 +23,9 @@ namespace ZigluFeatures.Features
         }
 
         /// <summary>
-        /// BDD wouldn't be at this level in the real world :S
+        /// BDD wouldn't be at this level in the real world :S you couldn't really write tests
+        /// for this because you're just testing data is retrieved from a third party API?
+        /// that's why I've added to ModelToTextOutput method on the service class
         /// </summary>
         /// <param name="coinName"></param>
         [Scenario]
@@ -30,39 +34,33 @@ namespace ZigluFeatures.Features
         [InlineData("nano")]
         public void UserCanQueryCoinValueInGbp(string coinName)
         {
-            var coin = new Coin();
-            
+            Coin coin = null;
+
             $"When the user queries coin data for {coinName}"
                 .x(async () =>
                 {
                     coin = await ZigluService.CoinInfo(coinName);
-                    
-                    _output.WriteLine(JsonSerializer.Serialize(coin, new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    }));
                 });
 
-            $"Then the user sees the value of {coinName} in GBP"
+            $"Then the user sees data for {coinName}"
                 .x(() =>
                 {
-                    // Assert ??
+                    _output.WriteLine(Service.ModelToTextOutput(coin));
+                    
+                    Assert.Equal(coinName, coin.Name, true);
                 });
+
+            $"And the user sees the value of {coinName} in GBP"
+                .x(() => { coin.MarketValue.Should().NotBe(default); });
 
             $"And the market cap for {coinName}"
-                .x(() =>
-                {
-                    // Assert ??
-                });
-            
+                .x(() => { coin.MarketCap.Should().NotBe(default); });
+
             $"And the 24 hour GBP price change for {coinName}"
-                .x(() =>
-                {
-                    // Assert ??
-                });
-            
+                .x(() => { coin.PriceChange.Should().NotBe(default); });
+
             $"And the time the coin data was last updated {coinName}"
-                .x(() => { });
+                .x(() => { coin.LastUpdated.Should().NotBe(default); });
         }
     }
 }

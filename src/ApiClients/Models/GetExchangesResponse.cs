@@ -23,8 +23,8 @@ namespace ApiClients.Models
         public int? TrustScoreRank { get; set; }
         
         [JsonPropertyName("trade_volume_24h_btc")]
-        public decimal TradeVolume24HoursBitcoin { get; set; }
+        public double TradeVolume24HoursBitcoin { get; set; }
         [JsonPropertyName("trade_volume_24h_btc_normalized")]
-        public decimal TradeVolume24HoursNormalized { get; set; }
+        public double TradeVolume24HoursNormalized { get; set; }
     }
 }

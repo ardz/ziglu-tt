@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -7,7 +6,7 @@ using ApiClients.Models;
 
 namespace ApiClients
 {
-    public class CoinGeckoClient
+    public class CoinGeckoClient : ICoinGeckoClient
     {
         private readonly HttpClient _httpClient;
 
@@ -58,7 +57,9 @@ namespace ApiClients
 
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<IEnumerable<GetDerivativesResponse>>(responseContent);
+            var foo = JsonSerializer.Deserialize<IEnumerable<GetDerivativesResponse>>(responseContent);
+
+            return foo; 
         }
     }
 }

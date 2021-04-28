@@ -8,9 +8,9 @@ namespace ZigluFeatures
 {
     public class FeatureFixture : IDisposable
     {
-        public Service ZigluService { get; }
+        protected Service ZigluService { get; }
 
-        public FeatureFixture()
+        protected FeatureFixture()
         {
             var config = new ConfigurationBuilder()
                 .AddJsonFile(System.IO.Directory.GetCurrentDirectory() + "\\appsettings.json")

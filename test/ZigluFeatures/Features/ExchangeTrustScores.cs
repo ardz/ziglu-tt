@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using FluentAssertions;
 using Xbehave;
 using Xunit;
 using Xunit.Abstractions;
+using ZigluService;
 using ZigluService.Models;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ZigluFeatures.Features
 {
@@ -29,17 +29,22 @@ namespace ZigluFeatures.Features
         public void UserCanViewTopThreeExchangesTrustScore(List<Exchange> exchanges)
         {
             $"When the user queries the top three exchanges"
-                .x(async () => { exchanges = (await ZigluService.TopThreeExchanges()).ToList(); });
+                .x(async () =>
+                {
+                    exchanges = (await ZigluService.GetExchanges(3)).ToList();
+                });
 
             $"Then the user can see each of the exchanges names and their trust ranking"
                 .x(() =>
                 {
-                    _output.WriteLine(JsonSerializer.Serialize(exchanges, new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    }));
-
                     Assert.Equal(3, exchanges.Count);
+
+                    foreach (var exchangeData in exchanges.Select(Service.ModelToTextOutput))
+                    {
+                        exchangeData.Should().Contain("TrustScore");
+                        exchangeData.Should().Contain("TrustScoreRank");
+                        _output.WriteLine(exchangeData);
+                    }
                 });
         }
     }

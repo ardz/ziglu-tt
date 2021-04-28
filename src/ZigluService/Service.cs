@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Formats.Asn1;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -13,17 +10,16 @@ namespace ZigluService
 {
     public class Service
     {
-        private readonly CoinGeckoClient _coinGeckoClient;
+        private readonly ICoinGeckoClient _coinGeckoClient;
 
-        public Service(CoinGeckoClient coinGeckoClient)
+        public Service(ICoinGeckoClient coinGeckoClient)
         {
             _coinGeckoClient = coinGeckoClient;
         }
 
-        public async Task<IEnumerable<Exchange>> TopThreeExchanges()
+        public async Task<IEnumerable<Exchange>> GetExchanges(int numberOfExchanges)
         {
-            var result = await _coinGeckoClient
-                .GetExchanges(3, 1);
+            var result = await GetPaginatedExchanges(250, 1);
 
             return result.Select(x => new Exchange
             {
@@ -31,33 +27,21 @@ namespace ZigluService
                 YearEstablished = x.YearEstablished,
                 TrustScore = x.TrustScore,
                 TrustScoreRank = x.TrustScoreRank,
-            });
+            }).Take(numberOfExchanges);
         }
 
-        public async Task <IEnumerable<Exchange>> TopExchangesBitCoinTradingVolume(int limit)
+        public async Task<IEnumerable<Exchange>> TopBitcoinTradingVolumesByExchange(int numberOfExchanges)
         {
-            var response = new List<Exchange>();
-            
-            // using this to get round the poor performance/api restriction of listing all the exchanges
-            // and then having to sort by normalised 24 hour trade volume
-            var derivatives = await _coinGeckoClient
-                .GetDerivatives("trade_volume_24h_btc_desc", limit, 1);
+            var result = await GetPaginatedExchanges(250, 1);
 
-            foreach (var derivative in derivatives)
+            return result.Select(x => new Exchange
             {
-                var exchange = await _coinGeckoClient.GetExchange(derivative.Id);
-
-                response.Add(new Exchange
-                {
-                    Name = exchange.Name,
-                    Url = exchange.Url,
-                    YearEstablished = exchange.YearEstablished,
-                    TradeVolume24HoursBitcoin = exchange.TradeVolume24HoursBitcoin,
-                    TradeVolume24HoursNormalized = exchange.TradeVolume24HoursNormalized,
-                });
-            }
-
-            return response;
+                Name = x.Name,
+                Url = x.Url,
+                YearEstablished = x.YearEstablished,
+                TradeVolume24HoursBitcoin = x.TradeVolume24HoursBitcoin,
+                TradeVolume24HoursNormalized = x.TradeVolume24HoursNormalized,
+            }).OrderByDescending(x => x.TradeVolume24HoursNormalized).Take(numberOfExchanges);
         }
 
         public async Task<Coin> CoinInfo(string coinName)
@@ -71,20 +55,32 @@ namespace ZigluService
                 MarketValue = coin.MarketData.CurrentPrice.Gbp,
                 MarketCap = coin.MarketData.MarketCap.Gbp,
                 PriceChange = coin.MarketData.PriceChange24HourCurrency.Gbp,
-                NumberOfTwitterFollowers = coin.CommunityData.TwitterFollowers
+                NumberOfTwitterFollowers = coin.CommunityData.TwitterFollowers,
+                LastUpdated = coin.MarketData.LastUpdated
             };
         }
 
-        // not needed now :/ use the other endpoint
-        /*private async Task<IEnumerable<GetExchangesResponse>> GetPaginatedExchanges(int limit, int page)
+        // just added this so there's something to actually test when
+        // we're checking for props on the data that the API returns :/
+        public static string ModelToTextOutput(object obj)
         {
-            var allExchangesResponses = new List<GetExchangesResponse>();
-
-            var response = await _coinGeckoClient.GetExchange(limit, page);
+            return JsonSerializer.Serialize(obj, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+        }
+        
+        // using a recursive function here to basically query the exchanges endpoint twice
+        // there's a limit of 250 results per page so we need all the exchanges to be able
+        // to then sort which 5 have the top trading volumes normalised in 24 hours as per the requirement
+        private async Task<IEnumerable<GetExchangesResponse>> GetPaginatedExchanges(int limit, int page)
+        {
+            var response = (await _coinGeckoClient
+                .GetExchanges(limit, page)).ToList();
 
             return response.Any()
-                ? allExchangesResponses.Concat(await GetPaginatedExchanges(limit, page + 1))
-                : allExchangesResponses;
-        }*/
+                ? response.Concat(await GetPaginatedExchanges(limit, page + 1))
+                : response;
+        }
     }
 }

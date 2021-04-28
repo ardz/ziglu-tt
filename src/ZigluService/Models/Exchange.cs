@@ -8,7 +8,7 @@
         public int? YearEstablished { get; set; }
         public int? TrustScore { get; set; }
         public int? TrustScoreRank { get; set; }
-        public decimal TradeVolume24HoursBitcoin { get; set; }
-        public decimal TradeVolume24HoursNormalized { get; set; }
+        public double TradeVolume24HoursBitcoin { get; set; }
+        public double TradeVolume24HoursNormalized { get; set; }
     }
 }

@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZigluFeatures", "test\Ziglu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiClients", "src\ApiClients\ApiClients.csproj", "{02A9F1B8-C9CA-45AD-B036-9AF47991616A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZigluConsole", "src\ZigluConsole\ZigluConsole.csproj", "{FC4CE12B-E003-4135-8BE0-4382A61D958D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{02A9F1B8-C9CA-45AD-B036-9AF47991616A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02A9F1B8-C9CA-45AD-B036-9AF47991616A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02A9F1B8-C9CA-45AD-B036-9AF47991616A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC4CE12B-E003-4135-8BE0-4382A61D958D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC4CE12B-E003-4135-8BE0-4382A61D958D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC4CE12B-E003-4135-8BE0-4382A61D958D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC4CE12B-E003-4135-8BE0-4382A61D958D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
