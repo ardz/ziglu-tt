@@ -1,4 +1,14 @@
 # ziglu-tt
+
+-	Notes
+o	Using xBehave instead of specflow, have assumed only technical people would be reading and potentially writing the tests with input form stakeholders, specflow is a bit heavy/bloated/unneeded in my opinion?
+o	Removed the console application because the ITestOutputHelper in xunit writes anything out to test output for anyone to see (run tests inside your IDE of choice to see the output, if you run dotnet test from the test directory you’ll only see output if tests fail)
+o	Was quite difficult to write tests because it’s a third party API integration? Test boundaries etc… Have tried as much as possible to test things in the ziglu service (our domain)
+o	Didn’t have time to add the docker compose file
+o	Didn’t have time to write the JSON to describe myself unfortunately but happy to discuss that face to face!
+     
+email questions/comments to richard@developerintest.dev
+
 technical excercise repo for ziglu
 
 Ziglu Automation
