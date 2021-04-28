@@ -8,6 +8,7 @@
 * Didn’t have time to write the JSON to describe myself unfortunately but happy to discuss that face to face!
 * Spent rougly 4/5 hours on the task over 3 days
 * Most interesting tred in test automation is the way dev teams are now treating testing as important as the actual writing of the code - architecting the application in such as to make it as testable as possible, hexagonal architecture, microservices etc where you can't test through the UI etc
+* Config would be injected with secrets from the CI/CD pipeline in the real world
      
 email questions/comments to richard@developerintest.dev
 
