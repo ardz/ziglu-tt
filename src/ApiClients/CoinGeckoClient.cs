@@ -57,9 +57,7 @@ namespace ApiClients
 
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            var foo = JsonSerializer.Deserialize<IEnumerable<GetDerivativesResponse>>(responseContent);
-
-            return foo; 
+            return JsonSerializer.Deserialize<IEnumerable<GetDerivativesResponse>>(responseContent);
         }
     }
 }
